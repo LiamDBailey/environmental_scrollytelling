@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://russellgoldenberg.github.io/scrollama/progress/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Scrollama: Progress Example</title>
+    <meta name="description" content="Scrollama: Progress Example">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+      #scrolly {
+        position: relative;
+      }
+
+      article {
+        position: relative;
+        padding: 0 1rem;
+        margin: 0 auto;
+        width: 33%;
+      }
+
+      .step {
+        margin: 2rem auto 4rem auto;
+        padding: 1rem;
+        border: 2px solid #f3f3f3;
+      }
+
+      .step p {
+        text-align: center;
+        margin: 0.5rem auto;
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+   <main>
+      <section id="intro">
+        <h1 class="intro__hed">Progress Example</h1>
+        <p class="intro__dek">
+          Start scrolling to see how it works.
+        </p>
+      </section>
+      <section id="scrolly">
+        <article>
+          <div class="step" fill_colour="218,165,32" style="height: 504px;">
+            <p>STEP 1</p>
+            <p class="progress">0.0%</p>
+          </div>
+          <div class="step" fill_colour="0,128,128" style="height: 504px;">
+            <p>STEP 2</p>
+            <p class="progress">0.0%</p>
+          </div>
+        </article>
+      </section>
+      <section id="outro"></section>
+    </main>
+
+    <!-- Load d3 library for easier element indexing -->
+    <script src="https://unpkg.com/d3"></script>
+    <script src="https://unpkg.com/intersection-observer"></script>
+    <script src="./scrollama.min.js"></script>
+    <script>
+
+      // initialize the scrollama
+      var scroller = scrollama();
+
+      // response object in this case has a 'progress' attribute, rather than a direction
+      function handleStepProgress(response) {
+        console.log(response);
+
+        // Select focal element
+        var el = d3.select(response.element);
+
+        // Select attribute 'data-step' from the focal element
+        var val = el.attr("fill_colour");
+        // Make an rgba value where alpha is the progress of the response
+        var rgba = "rgba(" + val + ", " + response.progress + ")";
+        // Adjust background colour with rgba
+        el.style("background-color", rgba);
+        // Adjust text inside box with progress attribute
+        el.select(".progress").text(d3.format(".1%")(response.progress));
+      }
+
+      function init() {
+        scroller
+          .setup({
+            step: "#scrolly article .step",
+            progress: true,
+            debug: true,
+            offset: 0.75,
+          })
+          .onStepProgress(handleStepProgress);
+      }
+
+      // kick things off
+      init();
+    </script>
+
+</body></html>

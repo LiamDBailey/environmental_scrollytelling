@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Scrollama: Basic Example</title>
+    <meta name="description" content="Scrollama: Basic Example" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      #scrolly {
+        position: relative;
+      }
+
+      article {
+        position: relative;
+        padding: 0 1rem;
+        margin: 0 auto;
+        width: 50%;
+      }
+
+      .step {
+        margin: 2rem auto 4rem auto;
+        background-color: #3b3b3b;
+        color: #fff;
+        opacity: 0.25;
+      }
+
+      .step.is-active {
+        background-color: goldenrod;
+        color: #3b3b3b;
+        border: 2px solid black;
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+        transition: background-color 1s ease-in-out;
+      }
+
+      .step.is-active p {
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.5rem;
+        opacity: 1;
+      }
+
+      .step p {
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.5rem;
+        opacity: 0;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <section id="intro">
+        <h1 class="intro__hed">Basic Example</h1>
+        <p class="intro__dek">
+          Start scrolling to see how it works.
+        </p>
+      </section>
+      <section id="scrolly_id">
+        <article>
+          <div class = "step">
+            <p>Introductionary paragraph <br> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium quae animi reiciendis debitis non. Ex voluptas, minima autem corrupti asperiores soluta at optio sapiente, sit, a tempora obcaecati? Illum, neque.</p>
+          </div>
+          <div class="step">
+            <p>STEP 1</p>
+          </div>
+          <div class="step">
+            <p>STEP 2</p>
+          </div>
+          <div class="step">
+            <p>STEP 3</p>
+          </div>
+          <div class="step">
+            <p>STEP 4</p>
+          </div>
+        </article>
+      </section>
+      <section id="outro"></section>
+    </main>
+
+    <!-- Load relevant libraries need both scrollama and intersection library-->
+    <script src="https://unpkg.com/intersection-observer"></script>
+    <script src="./scrollama.min.js"></script>
+    <script>
+      // Not used??
+      // // objects of id scrolly_id
+      // var scrolly = document.querySelector("#scrolly_id");
+      // // Objects of type article inside objects scrolly_id
+      // var article = scrolly.querySelector("article");
+      // // Objects of class step inside objects of type article inside objects scrolly_id
+      // var step = article.querySelectorAll(".step");
+
+      // Create scrollama object
+      var scroller = scrollama();
+
+      // Function to define what happens when we scroll over an object
+      function handleStepEnter(response) {
+        // response = { element, direction, index }
+        console.log(response);
+        // 'response.element' is the object currently where scrollytelling is triggered
+        // Change class type of triggered object (which changes style)
+        response.element.classList.add("is-active");
+      }
+
+      // Function to define what happens when we scroll past an object
+      function handleStepExit(response) {
+        // response = { element, direction, index }
+        console.log(response);
+        // 'response.element' is the object currently where scrollytelling is triggered
+        // Remove changes that occurred in handleStepEnter
+        response.element.classList.remove("is-active");
+      }
+
+      // Function to define what happens when we initialise the scrollytelling
+      function init() {
+
+        // 1. setup the scroller with the bare-bones options
+        // 		this will also initialize trigger observations
+        // 2. bind scrollama event handlers (this can be chained like below)
+        scroller
+          .setup({
+            // Apply to objects of the class step 
+            step: "#scrolly_id article .step",
+            // Do we show the location where scrollytelling actions are triggered
+            debug: true,
+            // How far from the top should scrollytelling actions be triggered (i.e. 0 is the top of the page)
+            offset: 0.25
+          })
+          // Use functions defined above when scoll events are triggered
+          .onStepEnter(handleStepEnter)
+          .onStepExit(handleStepExit);
+
+        // 3. setup resize event
+        window.addEventListener("resize", scroller.resize);
+      }
+
+      // kick things off
+      init();
+    </script>
+  </body>
+</html>
